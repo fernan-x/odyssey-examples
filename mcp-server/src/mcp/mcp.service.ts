@@ -14,6 +14,9 @@ export class MCPService {
           resources: {
             listChanged: false,
           },
+          tools: {
+            listChanged: false,
+          },
         },
         serverInfo: {
           name: 'mcp-example',
@@ -54,6 +57,56 @@ export class MCPService {
             title: 'List of subway stations from Montpellier',
             mimeType: 'text/markdown',
             text: STATIONS.map((station) => `- ${station}`).join('\n'),
+          },
+        ],
+      },
+    };
+  }
+  listTools(id: number) {
+    return {
+      jsonrpc: '2.0',
+      id,
+      result: {
+        tools: [
+          {
+            name: 'path_find',
+            title: 'Find a path between two subway stations',
+            description:
+              'This tool finds a path between two subway stations in Montpellier.',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                start: {
+                  type: 'string',
+                  description: 'The starting subway station (ex: "Antigone")',
+                },
+                end: {
+                  type: 'string',
+                  description: 'The ending subway station (ex: "Odysseum")',
+                },
+              },
+              required: ['start', 'end'],
+            },
+          },
+        ],
+      },
+    };
+  }
+  callPathFind(id: number, params: Record<string, unknown>) {
+    const { start, end } = params as { start: string; end: string };
+    console.debug('Finding path from', start, 'to', end);
+
+    // Simulate a path finding operation
+    const path = `Path from ${start} to ${end}: [${start} -> ... -> ${end}]`;
+
+    return {
+      jsonrpc: '2.0',
+      id,
+      result: {
+        content: [
+          {
+            type: 'text',
+            text: path,
           },
         ],
       },

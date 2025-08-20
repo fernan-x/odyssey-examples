@@ -20,6 +20,16 @@ export class MCPController {
         const uri = body.params?.uri as string;
         return this.mcpService.readResource(id, uri);
       }
+      case 'tools/list':
+        return this.mcpService.listTools(id);
+      case 'tools/call': {
+        const toolName = body.params?.name as string;
+        const toolParams = body.params?.arguments as Record<string, unknown>;
+        switch (toolName) {
+          case 'path_find':
+            return this.mcpService.callPathFind(id, toolParams);
+        }
+      }
     }
 
     return 'Method not implemented';
